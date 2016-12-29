@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "58520217788",
+    "firebase_url": "https://quiztree-11838.firebaseio.com",
+    "project_id": "quiztree-11838",
+    "storage_bucket": "quiztree-11838.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:58520217788:android:37198f02feb1b7d9",
+        "android_client_info": {
+          "package_name": "com.example.user.quiztree"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "58520217788-ufsqcs8rrfvm55ikonf5hsif880sa769.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0KHjFjAgFZcfY5buKPPZ5EehQxOQSrjI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
