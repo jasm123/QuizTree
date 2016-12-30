@@ -3,12 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1">
+
     <ImageView
         android:id="@+id/bullet"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:padding="8dp"
-        />
+        android:padding="8dp" />
+
     <TextView
         android:id="@+id/item"
         style="@style/itemStyle"
@@ -29,7 +30,8 @@
         android:id="@+id/progressBar"
         android:layout_alignBottom="@+id/bullet"
         android:layout_alignStart="@+id/item"
-        android:layout_alignLeft="@id/item"/>
+        android:layout_alignLeft="@id/item" />
+
     <TextView
         android:id="@+id/progresstxt"
         android:layout_width="wrap_content"
@@ -38,6 +40,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp"/>
+        android:layout_marginEnd="8dp" />
 
 </RelativeLayout>

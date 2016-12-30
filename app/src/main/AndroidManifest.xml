@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SplashScreen"
+            android:name=".ui.SplashScreen"
             android:theme="@style/Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,20 +21,37 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".ResetPasswordActivity" />
-        <activity android:name=".ChapterActivity"
-            android:configChanges="orientation|screenSize"/>
+        <activity android:name=".ui.LoginActivity" />
+        <activity android:name=".ui.RegisterActivity" />
+        <activity android:name=".ui.ResetPasswordActivity" />
         <activity
-            android:name=".QuizActivity"
+            android:name=".ui.ChapterActivity"
             android:configChanges="orientation|screenSize" />
-        <activity android:name=".ResultActivity"
-            android:label="@string/result"
-            android:configChanges="orientation|screenSize"></activity>
+        <activity
+            android:name=".ui.QuizActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".ui.ResultActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/result" />
+
+        <receiver android:name=".widget.ScoreWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/score_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".widget.WidgetService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

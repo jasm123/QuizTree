@@ -9,8 +9,8 @@
         android:id="@+id/icon"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:padding="8dp"
-        />
+        android:padding="8dp" />
+
     <TextView
         android:id="@+id/item"
         style="@style/itemStyle"

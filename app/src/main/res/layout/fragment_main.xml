@@ -6,21 +6,20 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
 
-    tools:context="com.example.user.quiztree.MainActivityFragment"
+    tools:context=".ui.MainActivityFragment"
     tools:showIn="@layout/activity_main">
+
     <ListView
         android:id="@+id/subjects"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="#e0e0e0"
-        android:dividerHeight="1dp"
-        >
-    </ListView>
+        android:dividerHeight="1dp"></ListView>
+
     <TextView
         android:id="@+id/empty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/no_results">
-    </TextView>
+        android:text="@string/no_results"></TextView>
 
 </RelativeLayout>
