@@ -6,23 +6,21 @@
     android:background="@color/white"
     android:padding="@dimen/widget_margin">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
 
-
-    <TextView
+        <TextView
             android:id="@+id/widget"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/widget_title"
-            android:textSize="20sp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_gravity="center"
-            android:textColor="@color/colorAccent" />
-
+            android:text="@string/widget_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/colorAccent"
+            android:textSize="20sp" />
 
 
         <ListView
@@ -34,5 +32,5 @@
             tools:listitem="@layout/widget_list_item" />
 
 
-</LinearLayout>
+    </LinearLayout>
 </FrameLayout>

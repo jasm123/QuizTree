@@ -29,12 +29,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 public class QuizActivity extends AppCompatActivity {
-    private static Firebase fb;
     private static final String Firebase_TOKEN = "VfQ88pzvp16JFFIvJAWhYv8IQAbSnPokrJhW9yAI";
+    private static Firebase fb;
+    ContentValues mUpdateValues;
+    // private TextView status;
+    String[] subtopics;
     private DatabaseReference mDatabase;
     private FirebaseAuth auth;
-    ContentValues mUpdateValues;
-
     private TextView questionText;
     private RadioButton option1;
     private RadioButton option2;
@@ -43,8 +44,6 @@ public class QuizActivity extends AppCompatActivity {
     private RadioButton selected;
     private RadioGroup radio;
     private ProgressDialog dialog;
-    // private TextView status;
-    String[] subtopics;
     private Button buttonNext;
 
 
@@ -95,7 +94,7 @@ public class QuizActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
         auth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mUpdateValues= new ContentValues();
+        mUpdateValues = new ContentValues();
         new LoadFirebaseData(this).execute(subtopics[chapter]);
         buttonNext.setOnClickListener(
                 new View.OnClickListener() {
@@ -137,6 +136,61 @@ public class QuizActivity extends AppCompatActivity {
         );
     }
 
+    private void displayQuestion() {
+
+
+        Log.d("Quiz", "in display question " + questionIndex);
+        questionText.setText(questions.get(questionIndex).questionText);
+        option1.setText(questions.get(questionIndex).option1);
+        option2.setText(questions.get(questionIndex).option2);
+        option3.setText(questions.get(questionIndex).option3);
+        option4.setText(questions.get(questionIndex).option4);
+        radio.clearCheck();
+
+    }
+
+    private void advance() {
+        Log.d("Quiz", "in advance. " + questionIndex);
+        if (questionIndex == questions.size() - 1) {
+            String title = getSupportActionBar().getTitle().toString();
+            switch (title) {
+                case "Ratio and Proportion":
+                    mDatabase.child("users").child(auth.getCurrentUser().getUid()).child("score_m_1").setValue(score);
+                    break;
+                case "Decimals":
+                    mDatabase.child("users").child(auth.getCurrentUser().getUid()).child("score_m_2").setValue(score);
+                    break;
+                case "Biology":
+                    mDatabase.child("users").child(auth.getCurrentUser().getUid()).child("score_s_1").setValue(score);
+                    break;
+                case "Physics":
+                    mDatabase.child("users").child(auth.getCurrentUser().getUid()).child("score_s_2").setValue(score);
+                    break;
+            }
+            String mSelectionClause = ScoresContract.Scores.CHAPTER + " LIKE ?";
+            String[] mSelectionArgs = {title};
+            mUpdateValues.put(ScoresContract.Scores.SCORE, score);
+            getContentResolver().update(
+                    ScoresContract.Scores.CONTENT_URI,   // the content URI
+                    mUpdateValues,                       // the columns to update
+                    mSelectionClause,                   // the column to select on
+                    mSelectionArgs                      // the value to compare to
+            );
+
+            Intent intent = new Intent(this, ResultActivity.class);
+            intent.putExtra("Chapter", this.getSupportActionBar().getTitle());
+            intent.putExtra("score", score);
+            intent.putExtra("total", questions.size());
+            startActivity(intent);
+            finish();
+        } else {
+            questionIndex = (questionIndex + 1);
+            displayQuestion();
+
+        }
+
+    }
+
     private class LoadFirebaseData extends AsyncTask<String, Void, Void> {
 
         private QuizActivity activity;
@@ -151,9 +205,9 @@ public class QuizActivity extends AppCompatActivity {
 
 
             Log.d("Quiz", "showing progress dialog");
-            dialog = ProgressDialog.show(activity,getString(R.string.pls_wait),getString(R.string.loading_pd), true);
+            dialog = ProgressDialog.show(activity, getString(R.string.pls_wait), getString(R.string.loading_pd), true);
             dialog.setCancelable(true);
-           super.onPreExecute();
+            super.onPreExecute();
         }
 
 
@@ -197,61 +251,6 @@ public class QuizActivity extends AppCompatActivity {
             dialog.dismiss();
             //alert.cancel();
             super.onPostExecute(result);
-        }
-
-    }
-
-    private void displayQuestion() {
-
-
-        Log.d("Quiz", "in display question " + questionIndex);
-        questionText.setText(questions.get(questionIndex).questionText);
-        option1.setText(questions.get(questionIndex).option1);
-        option2.setText(questions.get(questionIndex).option2);
-        option3.setText(questions.get(questionIndex).option3);
-        option4.setText(questions.get(questionIndex).option4);
-        radio.clearCheck();
-
-    }
-
-    private void advance() {
-        Log.d("Quiz", "in advance. " + questionIndex);
-        if (questionIndex == questions.size() - 1) {
-            String title = getSupportActionBar().getTitle().toString();
-            switch (title) {
-                case "Ratio and Proportion":
-                    mDatabase.child("users").child(auth.getCurrentUser().getUid()).child("score_m_1").setValue(score);
-                    break;
-                case "Decimals":
-                    mDatabase.child("users").child(auth.getCurrentUser().getUid()).child("score_m_2").setValue(score);
-                    break;
-                case "Biology":
-                    mDatabase.child("users").child(auth.getCurrentUser().getUid()).child("score_s_1").setValue(score);
-                    break;
-                case "Physics":
-                    mDatabase.child("users").child(auth.getCurrentUser().getUid()).child("score_s_2").setValue(score);
-                    break;
-            }
-            String mSelectionClause = ScoresContract.Scores.CHAPTER +  " LIKE ?";
-            String[] mSelectionArgs = {title};
-            mUpdateValues.put(ScoresContract.Scores.SCORE,score);
-            getContentResolver().update(
-                    ScoresContract.Scores.CONTENT_URI,   // the content URI
-                    mUpdateValues,                       // the columns to update
-                    mSelectionClause,                   // the column to select on
-                    mSelectionArgs                      // the value to compare to
-            );
-
-            Intent intent = new Intent(this, ResultActivity.class);
-            intent.putExtra("Chapter", this.getSupportActionBar().getTitle());
-            intent.putExtra("score", score);
-            intent.putExtra("total", questions.size());
-            startActivity(intent);
-            finish();
-        } else {
-            questionIndex = (questionIndex + 1);
-            displayQuestion();
-
         }
 
     }

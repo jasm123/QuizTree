@@ -86,14 +86,14 @@ import com.example.user.quiztree.data.ScoresContract;
 
 }
 */
-public class CustomChapterAdapter extends CursorAdapter{
+public class CustomChapterAdapter extends CursorAdapter {
     private LayoutInflater cursorInflater;
     private Activity context;
 
     public CustomChapterAdapter(Activity context, Cursor c, int flags) {
         super(context, c, flags);
-        this.context=context;
-        cursorInflater=(LayoutInflater) context.getSystemService(
+        this.context = context;
+        cursorInflater = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
 
     }
@@ -112,8 +112,8 @@ public class CustomChapterAdapter extends CursorAdapter{
         imageView.setImageResource(R.mipmap.bullet);
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         final TextView progressTxt = (TextView) view.findViewById(R.id.progresstxt);
-        progressBar.setProgress(cursor.getInt(cursor.getColumnIndex(ScoresContract.Scores.SCORE))*20);
-        progressTxt.setText(cursor.getInt(cursor.getColumnIndex(ScoresContract.Scores.SCORE))*20+"%");
+        progressBar.setProgress(cursor.getInt(cursor.getColumnIndex(ScoresContract.Scores.SCORE)) * 20);
+        progressTxt.setText(cursor.getInt(cursor.getColumnIndex(ScoresContract.Scores.SCORE)) * 20 + "%");
         progressBar.incrementProgressBy(0);
 
 

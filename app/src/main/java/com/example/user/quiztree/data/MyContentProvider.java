@@ -19,18 +19,11 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 
 public class MyContentProvider extends ContentProvider {
-    private SQLiteOpenHelper mOpenHelper;
-
-
-
-    public interface Tables {
-        String SCORES = "scores";
-    }
     private static final int SCORES = 0;
     private static final int SCORES_ID = 1;
-
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private final ThreadLocal<Boolean> mIsInBatchMode = new ThreadLocal<Boolean>();
+    private SQLiteOpenHelper mOpenHelper;
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -39,7 +32,6 @@ public class MyContentProvider extends ContentProvider {
         matcher.addURI(authority, "scores/#", SCORES_ID);
         return matcher;
     }
-
 
     @Override
     public boolean onCreate() {
@@ -64,7 +56,7 @@ public class MyContentProvider extends ContentProvider {
                 builder.setTables(Tables.SCORES);
                 // limit query to one row at most:
                 builder.appendWhere(ScoresContract.Scores._ID + " = " + uri.getLastPathSegment());
-                useAuthorityUri=true;
+                useAuthorityUri = true;
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
@@ -82,8 +74,7 @@ public class MyContentProvider extends ContentProvider {
             cursor.setNotificationUri(
                     getContext().getContentResolver(),
                     ScoresContract.BASE_URI);
-        }
-        else {
+        } else {
             cursor.setNotificationUri(
                     getContext().getContentResolver(),
                     uri);
@@ -106,7 +97,6 @@ public class MyContentProvider extends ContentProvider {
         }
     }
 
-
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
@@ -114,7 +104,7 @@ public class MyContentProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case SCORES: {
-                final long _id = db.insertWithOnConflict(Tables.SCORES, null, values,SQLiteDatabase.CONFLICT_IGNORE);
+                final long _id = db.insertWithOnConflict(Tables.SCORES, null, values, SQLiteDatabase.CONFLICT_IGNORE);
                 getContext().getContentResolver().notifyChange(uri, null);
                 return getUriForId(_id, uri);
             }
@@ -124,7 +114,8 @@ public class MyContentProvider extends ContentProvider {
         }
 
     }
-    private Uri getUriForId(long id, Uri uri)  {
+
+    private Uri getUriForId(long id, Uri uri) {
         if (id > 0) {
             Uri itemUri = ContentUris.withAppendedId(uri, id);
             if (!isInBatchMode()) {
@@ -132,7 +123,7 @@ public class MyContentProvider extends ContentProvider {
             }
             return itemUri;
         }
-        return  null;
+        return null;
 
         // s.th. went wrong:
 //        throw new SQLException("Problem while inserting into uri: " + uri);
@@ -234,5 +225,9 @@ public class MyContentProvider extends ContentProvider {
 
     private boolean isInBatchMode() {
         return mIsInBatchMode.get() != null && mIsInBatchMode.get();
+    }
+
+    public interface Tables {
+        String SCORES = "scores";
     }
 }

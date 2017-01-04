@@ -11,12 +11,16 @@ public class ScoresContract {
     public static final String CONTENT_AUTHORITY = "com.example.user.quiztree";
     public static final Uri BASE_URI = Uri.parse("content://com.example.user.quiztree");
 
+    private ScoresContract() {
+    }
+
     interface ScoreColumns {
         String _ID = "_id";
         String CHAPTER = "chapter";
-        String SCORE="score";
+        String SCORE = "score";
     }
-    public static final class Scores implements ScoreColumns{
+
+    public static final class Scores implements ScoreColumns {
         /**
          * The content URI for this table.
          */
@@ -26,13 +30,13 @@ public class ScoresContract {
         /**
          * The mime type of a directory of items.
          */
-        public static final String CONTENT_TYPE ="vnd.android.cursor.dir/vnd.com.example.user.quiztree.scores";
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.com.example.user.quiztree.scores";
 
         /**
          * The mime type of a single item.
          */
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE +
-                        "/vnd.com.example.user.quiztree.scores";
+                "/vnd.com.example.user.quiztree.scores";
         /**
          * A projection of all columns
          * in the items table.
@@ -41,18 +45,11 @@ public class ScoresContract {
                 {_ID, CHAPTER, SCORE};
 
 
-        /** Matches: /scores/ */
+        /**
+         * Matches: /scores/
+         */
         public static Uri buildDirUri() {
             return BASE_URI.buildUpon().appendPath("scores").build();
         }
-
-
-
-
     }
-
-    private ScoresContract(){
-
-    }
-
 }

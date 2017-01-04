@@ -23,15 +23,14 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 public class MainActivity extends AppCompatActivity {
-    private FirebaseAuth auth;
-    private FirebaseAuth.AuthStateListener authListener;
-
-    private ListView listView;
-    private String[] topics;
     Integer[] imgid = {
             R.drawable.abacus,
             R.drawable.science
     };
+    private FirebaseAuth auth;
+    private FirebaseAuth.AuthStateListener authListener;
+    private ListView listView;
+    private String[] topics;
     private Resources resources;
     private String TAG = "MainActivity";
 
@@ -45,12 +44,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         resources = getResources();
-        String[] chapters=resources.getStringArray(R.array.all_chapters);
-        for(int i=0;i<chapters.length;i++){
-            ContentValues values=new ContentValues();
-            values.put(ScoresContract.Scores.CHAPTER,chapters[i]);
-            values.put(ScoresContract.Scores.SCORE,0);
-            getContentResolver().insert(ScoresContract.Scores.CONTENT_URI,values);
+        String[] chapters = resources.getStringArray(R.array.all_chapters);
+        for (int i = 0; i < chapters.length; i++) {
+            ContentValues values = new ContentValues();
+            values.put(ScoresContract.Scores.CHAPTER, chapters[i]);
+            values.put(ScoresContract.Scores.SCORE, 0);
+            getContentResolver().insert(ScoresContract.Scores.CONTENT_URI, values);
         }
 
         topics = resources.getStringArray(R.array.itemName);

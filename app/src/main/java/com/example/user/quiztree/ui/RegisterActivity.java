@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,11 +27,6 @@ import butterknife.ButterKnife;
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "RegisterActivity";
-    private DatabaseReference mDatabase;
-    private FirebaseDatabase mFirebaseInstance;
-
-    private FirebaseAuth auth;
-
     @Bind(R.id.name)
     EditText _nameText;
     @Bind(R.id.grade)
@@ -47,6 +41,9 @@ public class RegisterActivity extends AppCompatActivity {
     Button btnSignIn;
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
+    private DatabaseReference mDatabase;
+    private FirebaseDatabase mFirebaseInstance;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,29 +71,29 @@ public class RegisterActivity extends AppCompatActivity {
                 String password = inputPassword.getText().toString().trim();
 
                 if (TextUtils.isEmpty(name)) {
-                    Toast.makeText(getApplicationContext(), "Please enter your name!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.enter_name), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (TextUtils.isEmpty(grade)) {
-                    Toast.makeText(getApplicationContext(), "Enter your class!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.enter_class), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (Integer.parseInt(grade) < 1 || Integer.parseInt(grade) > 12) {
-                    Toast.makeText(getApplicationContext(), "Enter valid grade between 1 to 12!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.valid_class), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.email_enter), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.pwd_enter), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (password.length() < 6) {
-                    Toast.makeText(getApplicationContext(), "Password too short, enter minimum 6 characters!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.minimum_password), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -106,16 +103,15 @@ public class RegisterActivity extends AppCompatActivity {
                         .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                Toast.makeText(RegisterActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.GONE);
                                 // If sign in fails, display a message to the user. If sign in succeeds
                                 // the auth state listener will be notified and logic to handle the
                                 // signed in user can be handled in the listener.
                                 if (!task.isSuccessful()) {
-                                    Toast.makeText(RegisterActivity.this, "Authentication failed." + task.getException().getMessage(),
+                                    Toast.makeText(RegisterActivity.this, getString(R.string.authentication_failed) + task.getException().getMessage(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Log.d(TAG, "user created!");
+
                                     onAuthSuccess(task.getResult().getUser());
                                 }
                             }
@@ -127,7 +123,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void onAuthSuccess(FirebaseUser userC) {
-        Log.d(TAG, "in onAuthSuccess");
         String name = _nameText.getText().toString();
         String grade = _gradeText.getText().toString();
         String userId = userC.getUid();

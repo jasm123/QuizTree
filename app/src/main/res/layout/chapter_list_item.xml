@@ -13,33 +13,33 @@
     <TextView
         android:id="@+id/item"
         style="@style/itemStyle"
-        android:layout_toRightOf="@id/bullet"
-        android:layout_toEndOf="@id/bullet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/bullet"
+        android:layout_toRightOf="@id/bullet"
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:max="100"
-        android:layout_marginRight="42dp"
-        android:layout_marginEnd="42dp"
-        android:id="@+id/progressBar"
         android:layout_alignBottom="@+id/bullet"
+        android:layout_alignLeft="@id/item"
         android:layout_alignStart="@+id/item"
-        android:layout_alignLeft="@id/item" />
+        android:layout_marginEnd="42dp"
+        android:layout_marginRight="42dp"
+        android:max="100" />
 
     <TextView
         android:id="@+id/progresstxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/progressBar"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp" />
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp" />
 
 </RelativeLayout>

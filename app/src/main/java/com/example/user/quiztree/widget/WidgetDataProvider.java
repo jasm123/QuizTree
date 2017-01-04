@@ -35,7 +35,7 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
         Log.d("widget create", chapters[0]);
         scores = new int[chapters.length];
         auth = FirebaseAuth.getInstance();
-        if(auth.getCurrentUser()!=null) {
+        if (auth.getCurrentUser() != null) {
             mDatabase = FirebaseDatabase.getInstance().getReference("users").child(auth.getCurrentUser().getUid());
 
             mDatabase.addValueEventListener(new ValueEventListener() {
@@ -56,9 +56,9 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
 
                 }
             });
-        }else{
-            for(int i=0;i<scores.length;i++)
-                scores[i]=0;
+        } else {
+            for (int i = 0; i < scores.length; i++)
+                scores[i] = 0;
         }
 
 
@@ -66,10 +66,10 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
 
     @Override
     public void onDataSetChanged() {
-       //final long identityToken = Binder.clearCallingIdentity();
+        //final long identityToken = Binder.clearCallingIdentity();
         auth = FirebaseAuth.getInstance();
-        scores=new int[chapters.length];
-        if(auth.getCurrentUser()!=null) {
+        scores = new int[chapters.length];
+        if (auth.getCurrentUser() != null) {
             mDatabase = FirebaseDatabase.getInstance().getReference("users").child(auth.getCurrentUser().getUid());
 
             mDatabase.addValueEventListener(new ValueEventListener() {
@@ -90,17 +90,17 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
 
                 }
             });
-        }else{
-            for(int i=0;i<scores.length;i++)
-                scores[i]=0;
+        } else {
+            for (int i = 0; i < scores.length; i++)
+                scores[i] = 0;
         }
-       // Binder.restoreCallingIdentity(identityToken);
+        // Binder.restoreCallingIdentity(identityToken);
     }
 
     @Override
     public void onDestroy() {
-        chapters=null;
-        scores=null;
+        chapters = null;
+        scores = null;
     }
 
     @Override

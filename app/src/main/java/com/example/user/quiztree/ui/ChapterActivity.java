@@ -53,15 +53,15 @@ public class ChapterActivity extends AppCompatActivity implements LoaderManager.
                 } else {
                     Intent intent = new Intent(getApplicationContext(), QuizActivity.class);
                     intent.putExtra("Subject", subject);
-                    TextView title=(TextView)view.findViewById(R.id.item);
-                    switch (title.getText().toString()){
+                    TextView title = (TextView) view.findViewById(R.id.item);
+                    switch (title.getText().toString()) {
                         case "Ratio and Proportion":
                         case "Biology":
-                            intent.putExtra("Chapter",0);
+                            intent.putExtra("Chapter", 0);
                             break;
                         case "Decimals":
                         case "Physics":
-                            intent.putExtra("Chapter",1);
+                            intent.putExtra("Chapter", 1);
                             break;
 
                     }
@@ -83,25 +83,25 @@ public class ChapterActivity extends AppCompatActivity implements LoaderManager.
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String[] mProjection= ScoresContract.Scores.PROJECTION_ALL;
-        String[] mSelectionArgs=null;
-        String mSelectionClause = ScoresContract.Scores.CHAPTER+" IN (";
-        if(subject==0){
-            mSelectionArgs= getResources().getStringArray(R.array.maths_chapters);
-        }
-        else if(subject==1){
-            mSelectionArgs= getResources().getStringArray(R.array.science_chapters);
+        String[] mProjection = ScoresContract.Scores.PROJECTION_ALL;
+        String[] mSelectionArgs = null;
+        String mSelectionClause = ScoresContract.Scores.CHAPTER + " IN (";
+        if (subject == 0) {
+            mSelectionArgs = getResources().getStringArray(R.array.maths_chapters);
+        } else if (subject == 1) {
+            mSelectionArgs = getResources().getStringArray(R.array.science_chapters);
         }
         for (int i = 0; i < mSelectionArgs.length; i++) {
-            mSelectionClause += "?, ";}
+            mSelectionClause += "?, ";
+        }
         mSelectionClause = mSelectionClause.substring(0, mSelectionClause.length() - 2) + ")";
-        CursorLoader loader = new CursorLoader(getApplicationContext(), ScoresContract.Scores.CONTENT_URI,mProjection,mSelectionClause,mSelectionArgs,null);
+        CursorLoader loader = new CursorLoader(getApplicationContext(), ScoresContract.Scores.CONTENT_URI, mProjection, mSelectionClause, mSelectionArgs, null);
         return loader;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter=new CustomChapterAdapter(ChapterActivity.this,data,0);
+        adapter = new CustomChapterAdapter(ChapterActivity.this, data, 0);
         list.setAdapter(adapter);
     }
 
