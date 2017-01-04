@@ -1,11 +1,10 @@
 package com.example.user.quiztree.ui;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,8 +15,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.user.quiztree.utils.CustomAdapter;
 import com.example.user.quiztree.R;
+import com.example.user.quiztree.data.ScoresContract;
+import com.example.user.quiztree.utils.CustomAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -43,15 +43,16 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         auth = FirebaseAuth.getInstance();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
         resources = getResources();
+        String[] chapters=resources.getStringArray(R.array.all_chapters);
+        for(int i=0;i<chapters.length;i++){
+            ContentValues values=new ContentValues();
+            values.put(ScoresContract.Scores.CHAPTER,chapters[i]);
+            values.put(ScoresContract.Scores.SCORE,0);
+            getContentResolver().insert(ScoresContract.Scores.CONTENT_URI,values);
+        }
+
         topics = resources.getStringArray(R.array.itemName);
         listView = (ListView) findViewById(R.id.subjects);
         listView.setEmptyView(findViewById(R.id.empty));

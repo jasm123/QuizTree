@@ -1,6 +1,7 @@
 package com.example.user.quiztree.ui;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
@@ -14,8 +15,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.example.user.quiztree.utils.Question;
 import com.example.user.quiztree.R;
+import com.example.user.quiztree.data.ScoresContract;
+import com.example.user.quiztree.utils.Question;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -31,6 +33,8 @@ public class QuizActivity extends AppCompatActivity {
     private static final String Firebase_TOKEN = "VfQ88pzvp16JFFIvJAWhYv8IQAbSnPokrJhW9yAI";
     private DatabaseReference mDatabase;
     private FirebaseAuth auth;
+    ContentValues mUpdateValues;
+
     private TextView questionText;
     private RadioButton option1;
     private RadioButton option2;
@@ -91,7 +95,7 @@ public class QuizActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
         auth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        mUpdateValues= new ContentValues();
         new LoadFirebaseData(this).execute(subtopics[chapter]);
         buttonNext.setOnClickListener(
                 new View.OnClickListener() {
@@ -137,8 +141,6 @@ public class QuizActivity extends AppCompatActivity {
 
         private QuizActivity activity;
 
-        //AlertDialog.Builder ad;
-        //AlertDialog alert;
         public LoadFirebaseData(QuizActivity quizActivity) {
             activity = quizActivity;
             // ad= new AlertDialog.Builder(activity);
@@ -149,12 +151,9 @@ public class QuizActivity extends AppCompatActivity {
 
 
             Log.d("Quiz", "showing progress dialog");
-            dialog = ProgressDialog.show(activity, "Please wait", "Loading questions..", true);
+            dialog = ProgressDialog.show(activity,getString(R.string.pls_wait),getString(R.string.loading_pd), true);
             dialog.setCancelable(true);
-            //ad.setTitle("Please wait").setMessage("Loading...").setCancelable(true);
-            //alert=ad.show();
-            //sleep(3000);
-            super.onPreExecute();
+           super.onPreExecute();
         }
 
 
@@ -221,18 +220,28 @@ public class QuizActivity extends AppCompatActivity {
             String title = getSupportActionBar().getTitle().toString();
             switch (title) {
                 case "Ratio and Proportion":
-                    mDatabase.child("users").child(auth.getCurrentUser().getUid().toString()).child("score_m_1").setValue(score);
+                    mDatabase.child("users").child(auth.getCurrentUser().getUid()).child("score_m_1").setValue(score);
                     break;
                 case "Decimals":
-                    mDatabase.child("users").child(auth.getCurrentUser().getUid().toString()).child("score_m_2").setValue(score);
+                    mDatabase.child("users").child(auth.getCurrentUser().getUid()).child("score_m_2").setValue(score);
                     break;
                 case "Biology":
-                    mDatabase.child("users").child(auth.getCurrentUser().getUid().toString()).child("score_s_1").setValue(score);
+                    mDatabase.child("users").child(auth.getCurrentUser().getUid()).child("score_s_1").setValue(score);
                     break;
                 case "Physics":
-                    mDatabase.child("users").child(auth.getCurrentUser().getUid().toString()).child("score_s_2").setValue(score);
+                    mDatabase.child("users").child(auth.getCurrentUser().getUid()).child("score_s_2").setValue(score);
                     break;
             }
+            String mSelectionClause = ScoresContract.Scores.CHAPTER +  " LIKE ?";
+            String[] mSelectionArgs = {title};
+            mUpdateValues.put(ScoresContract.Scores.SCORE,score);
+            getContentResolver().update(
+                    ScoresContract.Scores.CONTENT_URI,   // the content URI
+                    mUpdateValues,                       // the columns to update
+                    mSelectionClause,                   // the column to select on
+                    mSelectionArgs                      // the value to compare to
+            );
+
             Intent intent = new Intent(this, ResultActivity.class);
             intent.putExtra("Chapter", this.getSupportActionBar().getTitle());
             intent.putExtra("score", score);

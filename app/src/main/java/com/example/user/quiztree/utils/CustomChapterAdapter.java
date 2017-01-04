@@ -1,39 +1,33 @@
 package com.example.user.quiztree.utils;
 
 import android.app.Activity;
-import android.util.Log;
+import android.content.Context;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.user.quiztree.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.example.user.quiztree.data.ScoresContract;
 
-
-public class CustomChapterAdapter extends ArrayAdapter<String> {
+/*public class CustomChapterAdapter extends ArrayAdapter<String> implements LoaderManager.LoaderCallbacks<Cursor> {
     private final Activity context;
     private final String[] chapters;
     private int subject;
-
     private FirebaseAuth auth;
     private DatabaseReference mDatabase;
 
     public CustomChapterAdapter(Activity context, String[] itemname, int subject) {
         super(context, R.layout.chapter_list_item, itemname);
         // TODO Auto-generated constructor stub
-        //progress=40;
         this.subject = subject;
         this.context = context;
         this.chapters = itemname;
+
         auth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(auth.getCurrentUser().getUid().toString());
         Log.d(getClass().toString(), mDatabase.toString());
@@ -88,4 +82,40 @@ public class CustomChapterAdapter extends ArrayAdapter<String> {
 
     }
 
+
+
+}
+*/
+public class CustomChapterAdapter extends CursorAdapter{
+    private LayoutInflater cursorInflater;
+    private Activity context;
+
+    public CustomChapterAdapter(Activity context, Cursor c, int flags) {
+        super(context, c, flags);
+        this.context=context;
+        cursorInflater=(LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
+
+    }
+
+
+    @Override
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        return cursorInflater.inflate(R.layout.chapter_list_item, null, true);
+    }
+
+    @Override
+    public void bindView(View view, Context context, Cursor cursor) {
+        TextView txtTitle = (TextView) view.findViewById(R.id.item);
+        txtTitle.setText(cursor.getString(cursor.getColumnIndex(ScoresContract.Scores.CHAPTER)));
+        ImageView imageView = (ImageView) view.findViewById(R.id.bullet);
+        imageView.setImageResource(R.mipmap.bullet);
+        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        final TextView progressTxt = (TextView) view.findViewById(R.id.progresstxt);
+        progressBar.setProgress(cursor.getInt(cursor.getColumnIndex(ScoresContract.Scores.SCORE))*20);
+        progressTxt.setText(cursor.getInt(cursor.getColumnIndex(ScoresContract.Scores.SCORE))*20+"%");
+        progressBar.incrementProgressBy(0);
+
+
+    }
 }

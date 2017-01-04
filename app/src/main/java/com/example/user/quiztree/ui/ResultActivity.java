@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.user.quiztree.R;
-import com.example.user.quiztree.ui.MainActivity;
 
 public class ResultActivity extends AppCompatActivity {
     private float percentage;
@@ -43,6 +42,7 @@ public class ResultActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
             }
         });
         if (percentage < 50) {
@@ -58,6 +58,6 @@ public class ResultActivity extends AppCompatActivity {
     public void onBackPressed() {
         moveTaskToBack(true);
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
-
+        finish();
     }
 }

@@ -3,7 +3,6 @@ package com.example.user.quiztree.widget;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Binder;
 import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
@@ -27,64 +26,81 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
 
     public WidgetDataProvider(Context context, Intent intent) {
         mContext = context;
-        auth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(auth.getCurrentUser().getUid().toString());
 
     }
 
     @Override
     public void onCreate() {
         chapters = mContext.getResources().getStringArray(R.array.all_chapters);
-        Log.d("widget", chapters[0]);
+        Log.d("widget create", chapters[0]);
         scores = new int[chapters.length];
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                Log.d("widget", user.score_m_1 + " " + user.score_m_2 + " " + user.score_s_1 + " " + user.score_s_2);
+        auth = FirebaseAuth.getInstance();
+        if(auth.getCurrentUser()!=null) {
+            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(auth.getCurrentUser().getUid());
 
-                scores[0] = user.score_m_1 * 20;
-                scores[1] = user.score_m_2 * 20;
-                scores[2] = user.score_s_1 * 20;
-                scores[3] = user.score_s_2 * 20;
+            mDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User user = dataSnapshot.getValue(User.class);
+                    Log.d("widget ondata change", user.score_m_1 + " " + user.score_m_2 + " " + user.score_s_1 + " " + user.score_s_2);
+                    scores = new int[chapters.length];
+                    scores[0] = user.score_m_1 * 20;
+                    scores[1] = user.score_m_2 * 20;
+                    scores[2] = user.score_s_1 * 20;
+                    scores[3] = user.score_s_2 * 20;
 
-            }
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }else{
+            for(int i=0;i<scores.length;i++)
+                scores[i]=0;
+        }
+
 
     }
 
     @Override
     public void onDataSetChanged() {
-        final long identityToken = Binder.clearCallingIdentity();
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+       //final long identityToken = Binder.clearCallingIdentity();
+        auth = FirebaseAuth.getInstance();
+        scores=new int[chapters.length];
+        if(auth.getCurrentUser()!=null) {
+            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(auth.getCurrentUser().getUid());
 
-                User user = dataSnapshot.getValue(User.class);
-                Log.d("widget", user.score_m_1 + " " + user.score_m_2 + " " + user.score_s_1 + " " + user.score_s_2);
-                scores[0] = user.score_m_1 * 20;
-                scores[1] = user.score_m_2 * 20;
-                scores[2] = user.score_s_1 * 20;
-                scores[3] = user.score_s_2 * 20;
+            mDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-            }
+                    User user = dataSnapshot.getValue(User.class);
+                    Log.d("widget dataset changed", user.score_m_1 + " " + user.score_m_2 + " " + user.score_s_1 + " " + user.score_s_2);
+                    scores[0] = user.score_m_1 * 20;
+                    scores[1] = user.score_m_2 * 20;
+                    scores[2] = user.score_s_1 * 20;
+                    scores[3] = user.score_s_2 * 20;
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                }
 
-            }
-        });
-        Binder.restoreCallingIdentity(identityToken);
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }else{
+            for(int i=0;i<scores.length;i++)
+                scores[i]=0;
+        }
+       // Binder.restoreCallingIdentity(identityToken);
     }
 
     @Override
     public void onDestroy() {
-
+        chapters=null;
+        scores=null;
     }
 
     @Override
@@ -99,13 +115,18 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
         }
         RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
         views.setTextViewText(R.id.chapter_name, chapters[position]);
-        Log.d("widget", chapters[position]);
+        Log.d("widget getViewsAt", chapters[position]);
         views.setTextViewText(R.id.points, scores[position] + "%");
         views.setImageViewResource(R.id.padnote, R.mipmap.bullet);
         if (scores[position] < 50)
             views.setTextColor(R.id.points, Color.parseColor("#ff0000"));
         else
             views.setTextColor(R.id.points, Color.parseColor("#4CAF50"));
+
+        final Intent fillInIntent = new Intent();
+        fillInIntent.putExtra("score", scores[position]);
+        views.setOnClickFillInIntent(R.id.widget_item, fillInIntent);
+
         return views;
     }
 
